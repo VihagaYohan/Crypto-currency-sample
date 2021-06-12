@@ -1,21 +1,72 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet,
     View,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    SafeAreaView,
+    Image,
+    ScrollView,
+    Animated
 } from 'react-native';
 
-const CryptoDetail = ({ navigation }) => {
+// constants
+import { FONTS, SIZES, COLORS, dummyData, icons } from '../constants'
+
+// components
+import { HeaderBar, CurrencyLabel } from '../components'
+
+const CryptoDetail = ({ navigation, route }) => {
+    const { currency } = route.params;
+    const [selectedCurrency, setSelectedCurrency] = useState(currency)
+
+    function renderChart() {
+        return (
+            <View style={{
+                marginTop: SIZES.padding,
+                marginHorizontal: SIZES.radius,
+                alignItems: 'center',
+                borderRadius: SIZES.radius,
+                backgroundColor: COLORS.white,
+                ...styles.shadow
+            }}>
+                {/* header */}
+                <View style={{
+                    flexDirection: 'row',
+                    marginTop: SIZES.padding,
+                    paddingHorizontal: SIZES.padding
+                }}>
+                    <View style={{ flex: 1 }}>
+                        <CurrencyLabel icon={selectedCurrency?.image}
+                            currency={selectedCurrency?.currency}
+                            code={selectedCurrency?.code} />
+                    </View>
+
+                    <View>
+                        <Text style={{ ...FONTS.h3 }}>${selectedCurrency?.amount}</Text>
+                        <Text style={{
+                            color: selectedCurrency?.type == "I" ? COLORS.green : COLORS.red,
+                            ...FONTS.body3
+                        }}>{selectedCurrency?.changes}</Text>
+                    </View>
+                </View>
+            </View>
+        )
+    }
+
     return (
-        <View style={styles.container}>
-            <Text>CryptoDetail</Text>
-            <TouchableOpacity
-                onPress={() => navigation.navigate("Transaction")}
-            >
-                <Text>Navigate to Transaction</Text>
-            </TouchableOpacity>
-        </View>
+        <SafeAreaView style={{
+            flex: 1,
+            backgroundColor: COLORS.lightGray
+        }}>
+            <HeaderBar right={true} />
+
+            <ScrollView>
+                <View style={{ flex: 1, paddingBottom: SIZES.padding }}>
+                    {renderChart()}
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 
